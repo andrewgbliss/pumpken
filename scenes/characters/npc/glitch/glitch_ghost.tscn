@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dt3e5xckxumgu"]
+
+[ext_resource type="Script" uid="uid://cixdwmjhk7c0x" path="res://blisscode/character/glitch_character_controller.gd" id="1_hupm0"]
+[ext_resource type="Script" uid="uid://bg1ecn0nprabn" path="res://blisscode/character/controls/glitch/glitch_ai_controls.gd" id="2_hupm0"]
+[ext_resource type="Texture2D" uid="uid://dl5ed1afrnnhn" path="res://assets/img/masks/LightMask.png" id="3_hupm0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7rjuw"]
+size = Vector2(14, 14)
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_hupm0"]
+load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609dd72ae31.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1oqer"]
+atlas = SubResource("CompressedTexture2D_hupm0")
+region = Rect2(64, 0, 16, 16)
+
+[node name="GlitchGhost" type="CharacterBody2D" node_paths=PackedStringArray("controls")]
+collision_mask = 4
+motion_mode = 1
+script = ExtResource("1_hupm0")
+controls = NodePath("GlitchAIControls")
+
+[node name="GlitchAIControls" type="Node" parent="."]
+script = ExtResource("2_hupm0")
+metadata/_custom_type_script = "uid://bg1ecn0nprabn"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(8, 8)
+shape = SubResource("RectangleShape2D_7rjuw")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_1oqer")
+centered = false
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+energy = 2.0
+texture = ExtResource("3_hupm0")
+offset = Vector2(8, 8)
+texture_scale = 3.0
