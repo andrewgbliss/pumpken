@@ -13,4 +13,8 @@ func _after_ready():
 	
 func spawn():
 	player = SpawnManager.spawn_player(player_key, global_position, entity_container)
+	player.died.connect(_on_died)
 	EventBus.player_spawned.emit(player)
+
+func _on_died():
+	player.spawn(global_position)

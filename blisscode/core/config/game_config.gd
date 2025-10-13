@@ -18,6 +18,7 @@ enum GAME_STATE {
 @export var game_start_scene: String = "res://scenes/game_start.tscn"
 @export var game_restore_scene: String = "res://scenes/game_restore.tscn"
 @export var default_world_path: String = "res://scenes/world/world.tscn"
+@export var grid_size: int = 16
 
 var from_world_door_id: String = ""
 var to_world_door_id: String = ""

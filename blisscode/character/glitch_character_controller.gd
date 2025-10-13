@@ -3,23 +3,41 @@ class_name GlitchCharacterController extends CharacterBody2D
 @export var grid_spacing: int = 16
 @export var move_speed: float = 320.0
 @export var controls: GlitchControls
+@export var sprite: Sprite2D
+@export var hat_sprite: Sprite2D
+@export var show_grave: bool = false
+@export var garbage_time: float = 1.0
+@export var spawn_on_ready: bool = false
 
 var target_position: Vector2
 var is_moving: bool = false
+var is_alive = false
+var facing_right: bool = true
+
+var hp: int = 1
+var skulls: int = 0
+var has_hat: bool = false
+
+signal collected_skulls
+signal health_changed(new_hp: int)
+signal died
+signal moved(new_position: Vector2)
+signal hit_wall
 
 func _ready():
-	# Snap to grid on start
-	position = Vector2(
-		round(position.x / grid_spacing) * grid_spacing,
-		round(position.y / grid_spacing) * grid_spacing
-	)
-	target_position = position
+	if hat_sprite:
+		hat_sprite.hide()
+	target_position = GameManager.snap_to_grid(position)
+	if spawn_on_ready:
+		spawn(position)
 
 func start_move(direction: Vector2):
 	target_position = position + (direction * grid_spacing)
 	is_moving = true
 
 func _physics_process(_delta: float):
+	if not is_alive:
+		return
 	# Check for input from controls
 	if not is_moving and controls and controls.has_movement_input():
 		var input_direction = controls.get_movement_direction()
@@ -33,16 +51,28 @@ func _physics_process(_delta: float):
 	velocity = direction * move_speed
 	
 	# Check for collision using move_and_slide return value
-	if move_and_slide():
+	move_and_slide()
+	
+	# Check for collisions after movement
+	if get_slide_collision_count() > 0:
+		for i in get_slide_collision_count():
+			var collision = get_slide_collision(i)
+			var collider = collision.get_collider()
+			
+			# if collision is GlitchCharacterController, handle damage
+			if collider is GlitchCharacterController:
+				if has_hat:
+					collider.take_damage(1)
+				else:
+					take_damage(1)
+				break # Only process first character collision
+
+		hit_wall.emit()
+		
 		# Stop movement due to collision
 		velocity = Vector2.ZERO
 		is_moving = false
-		# Snap to grid based on actual position after collision
-		var grid_position = Vector2(
-			round(position.x / grid_spacing) * grid_spacing,
-			round(position.y / grid_spacing) * grid_spacing
-		)
-		position = grid_position
+		position = GameManager.snap_to_grid(position)
 		target_position = position
 		return
 	
@@ -51,3 +81,59 @@ func _physics_process(_delta: float):
 		position = target_position
 		velocity = Vector2.ZERO
 		is_moving = false
+		moved.emit(position)
+
+func spawn(pos: Vector2):
+	show()
+	position = GameManager.snap_to_grid(pos)
+	hp = 1
+	is_alive = true
+
+func take_damage(amount: int):
+	hp -= amount
+	health_changed.emit(hp)
+	if hp <= 0:
+		die()
+
+func die():
+	if not is_alive:
+		return
+	hide()
+	is_moving = false
+	is_alive = false
+	velocity = Vector2.ZERO
+	target_position = Vector2.ZERO
+	if show_grave:
+		SpawnManager.spawn("gravestone", position, get_parent())
+	if garbage_time > 0.0:
+		await get_tree().create_timer(garbage_time).timeout
+		queue_free()
+	else:
+		await SpawnManager.float_text("Died", position, 1.0, get_parent())
+		died.emit()
+	
+	
+func restore_health(amount: int):
+	hp += amount
+	health_changed.emit(hp)
+	if hp > 3:
+		hp = 3
+
+func item_pickup(item: Item, _pos):
+	match item.name:
+		"skull":
+			skulls += 1
+			if skulls >= 3:
+				collected_skulls.emit()
+		"purple magicians hat":
+			has_hat = true
+			hat_sprite.show()
+		"candle":
+			restore_health(1)
+		"cauldron":
+			take_damage(1)
+		_:
+			print("Unknown item: ", item.name)
+
+func flip_sprite():
+	sprite.flip_h = !sprite.flip_h

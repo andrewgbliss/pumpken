@@ -9,6 +9,13 @@ extends Node2D
 
 signal paused_toggled(is_paused: bool)
 
+func _unhandled_input(event):
+	if Engine.is_editor_hint():
+		return
+	if event.is_action_pressed("quit"):
+		get_tree().quit()
+	if event.is_action_pressed("restart"):
+		reset_scene()
 
 func open_user_folder():
 	var user_data_path = ProjectSettings.globalize_path("user://")
@@ -118,3 +125,14 @@ func get_bottom_right_position() -> Vector2:
 func set_window_position(pos: Vector2):
 	# Set the window position.
 	DisplayServer.window_set_position(pos)
+
+func snap_to_grid(pos: Vector2) -> Vector2:
+	var current_pos = pos
+	var snapped_pos = Vector2(
+		round(current_pos.x / game_config.grid_size) * game_config.grid_size,
+		round(current_pos.y / game_config.grid_size) * game_config.grid_size
+	)
+	return snapped_pos
+
+func reset_scene():
+	get_tree().reload_current_scene()

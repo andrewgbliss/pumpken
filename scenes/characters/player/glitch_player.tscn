@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2s0prdufbnpc"]
+[gd_scene load_steps=9 format=3 uid="uid://b2s0prdufbnpc"]
 
 [ext_resource type="Script" uid="uid://cixdwmjhk7c0x" path="res://blisscode/character/glitch_character_controller.gd" id="1_5mchj"]
 [ext_resource type="Script" uid="uid://dedpq68e001xg" path="res://blisscode/character/controls/glitch/glitch_player_controls.gd" id="2_7rjuw"]
 [ext_resource type="Texture2D" uid="uid://dl5ed1afrnnhn" path="res://assets/img/masks/LightMask.png" id="3_ucf1f"]
+[ext_resource type="Script" uid="uid://bkupc4nvlgv7o" path="res://blisscode/lights/user_health_light.gd" id="4_7rjuw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7rjuw"]
 size = Vector2(14, 14)
@@ -14,11 +15,18 @@ load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609d
 atlas = SubResource("CompressedTexture2D_5mchj")
 region = Rect2(0, 0, 16, 16)
 
-[node name="GlitchPlayer" type="CharacterBody2D" node_paths=PackedStringArray("controls")]
-collision_mask = 4
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_7rjuw"]
+load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609dd72ae31.ctex"
+
+[node name="GlitchPlayer" type="CharacterBody2D" node_paths=PackedStringArray("controls", "sprite", "hat_sprite") groups=["player"]]
+collision_mask = 6
 motion_mode = 1
 script = ExtResource("1_5mchj")
 controls = NodePath("GlitchPlayerControls")
+sprite = NodePath("Sprite2D")
+hat_sprite = NodePath("Hat")
+show_grave = true
+garbage_time = 0.0
 
 [node name="GlitchPlayerControls" type="Node" parent="."]
 script = ExtResource("2_7rjuw")
@@ -32,10 +40,31 @@ shape = SubResource("RectangleShape2D_7rjuw")
 texture = SubResource("AtlasTexture_ucf1f")
 centered = false
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-color = Color(1.5719496, 0.7733736, 0, 1)
-energy = 3.0
+[node name="PointLight2D" type="PointLight2D" parent="." node_paths=PackedStringArray("character")]
 shadow_enabled = true
 texture = ExtResource("3_ucf1f")
 offset = Vector2(8, 8)
-texture_scale = 4.0
+script = ExtResource("4_7rjuw")
+character = NodePath("..")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 640
+limit_bottom = 360
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]
+remote_path = NodePath("../Camera2D")
+
+[node name="Hat" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(0, -8)
+texture = SubResource("CompressedTexture2D_7rjuw")
+centered = false
+hframes = 6
+vframes = 2
+frame = 2

@@ -1,3 +1,4 @@
+@tool
 class_name Pickup extends Node2D
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -10,24 +11,32 @@ class_name Pickup extends Node2D
 @export var follow_target: bool = false
 @export var follow_speed: float = 100.0
 @export var hotspots: Array[Hotspot] = []
-@export var snap_to_grid: int = 16
 
 signal pickedup(item: Item, pos: Vector2)
 
+@export_tool_button("Set Sprite From Item", "Callable") var set_sprite_action = set_sprite
+
+func set_sprite():
+	if item:
+		if sprite:
+			sprite.texture = item.texture
+			sprite.hframes = item.hframes
+			sprite.vframes = item.vframes
+			sprite.frame = item.frame
+
+			if sprite.material:
+				sprite.material.set_shader_parameter("rarity", item.rarity)
+
 func _ready():
+	if Engine.is_editor_hint():
+		return
 	_connect_hotspots()
 	if item:
 		set_item(item)
 	if start_animation and animation_player and animation_player.has_animation(animation_name):
 		animation_player.play(animation_name)
 	
-	# Snap to grid position
-	var current_pos = position
-	var snapped_pos = Vector2(
-		round(current_pos.x / snap_to_grid) * snap_to_grid,
-		round(current_pos.y / snap_to_grid) * snap_to_grid
-	)
-	position = snapped_pos
+	position = GameManager.snap_to_grid(position)
 
 func _connect_hotspots():
 	for hotspot in hotspots:
@@ -36,12 +45,7 @@ func _connect_hotspots():
 
 func set_item(new_item: Item):
 	item = new_item
-	sprite.texture = item.texture
-	sprite.hframes = item.hframes
-	sprite.vframes = item.vframes
-	sprite.frame = item.frame
-	if sprite and sprite.material:
-		sprite.material.set_shader_parameter("rarity", item.rarity)
+	set_sprite()
 	
 func _on_interacted(body, pos: Vector2):
 	_pickup_handler(body, pos)
@@ -54,6 +58,8 @@ func _get_current_body():
 	return null
 
 func _process(delta):
+	if Engine.is_editor_hint():
+		return
 	var current_body = _get_current_body()
 	if current_body:
 		if follow_target:
@@ -64,8 +70,8 @@ func _process(delta):
 			set_global_position(new_pos)
 
 func _pickup_handler(body, pos: Vector2):
-	#if body is CharacterController:
-		#body.item_pickup(item, pos)
+	if body is GlitchCharacterController:
+		body.item_pickup(item, pos)
 	pickedup.emit(item, pos)
 	hide()
 	await get_tree().create_timer(garbage_time).timeout
