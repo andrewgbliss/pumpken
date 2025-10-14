@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cq63m526ium7m"]
+[gd_scene load_steps=9 format=3 uid="uid://cq63m526ium7m"]
 
 [ext_resource type="Script" uid="uid://1f3qoqbyq044" path="res://blisscode/item/pickup.gd" id="1_58ufh"]
 [ext_resource type="Script" uid="uid://dfarl1fr76j2f" path="res://blisscode/item/consumable.gd" id="2_u1miw"]
@@ -21,10 +21,7 @@ vframes = 2
 metadata/_custom_type_script = "uid://dfarl1fr76j2f"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gg01l"]
-size = Vector2(10, 16)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_4cg37"]
-radius = 36.0139
+size = Vector2(16, 16)
 
 [node name="Cauldron" type="Node2D" node_paths=PackedStringArray("hotspots")]
 script = ExtResource("1_58ufh")
@@ -42,28 +39,20 @@ frame = 8
 [node name="InteractArea2D" type="Area2D" parent="."]
 position = Vector2(8, 8)
 collision_layer = 8
+collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea2D"]
 shape = SubResource("RectangleShape2D_gg01l")
-
-[node name="InRangeArea2D" type="Area2D" parent="."]
-position = Vector2(8, 8)
-collision_layer = 8
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InRangeArea2D"]
-shape = SubResource("CircleShape2D_4cg37")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_0oi5h")
 volume_db = -11.243
 bus = &"Effects"
 
-[node name="HotspotCollision" type="Node2D" parent="." node_paths=PackedStringArray("interact_area", "in_range_area", "interact_audio")]
+[node name="HotspotCollision" type="Node2D" parent="." node_paths=PackedStringArray("interact_area", "interact_audio")]
 script = ExtResource("5_xq1q4")
 interact_area = NodePath("../InteractArea2D")
-in_range_area = NodePath("../InRangeArea2D")
 interact_audio = NodePath("../AudioStreamPlayer")
-interaction_text = ""
 metadata/_custom_type_script = "uid://cllnj4m6d7la4"
 
 [node name="PointLight2D" type="PointLight2D" parent="."]

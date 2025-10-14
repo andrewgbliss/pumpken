@@ -37,7 +37,7 @@ region = Rect2(16, 0, 16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6w0uy"]
 size = Vector2(16, 16)
 
-[node name="Level1" type="Node2D"]
+[node name="Level1c" type="Node2D"]
 
 [node name="World" parent="." instance=ExtResource("1_f7f1i")]
 

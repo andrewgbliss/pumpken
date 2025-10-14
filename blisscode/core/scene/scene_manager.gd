@@ -40,6 +40,9 @@ func _deferred_goto_scene(path, transition_name):
 	if transition:
 		await transition.transition_in()
 	
+	var root = get_tree().root
+	current_scene = root.get_child(-1)
+
 	# It is now safe to remove the current scene
 	if is_instance_valid(current_scene):
 		current_scene.free()

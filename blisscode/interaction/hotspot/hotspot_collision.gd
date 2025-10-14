@@ -1,7 +1,6 @@
 class_name HotspotCollision extends Hotspot
 
 func _ready():
-	super ()
 	if interact_area:
 		interact_area.body_entered.connect(_on_body_entered)
 			
