@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://2qlgbrup14ac"]
+
+[ext_resource type="Environment" uid="uid://cl6egmnwftyvv" path="res://scenes/world/world_env.tres" id="1_dphjl"]
+
+[node name="World" type="Node2D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_dphjl")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.61339027, 0.61339027, 0.61339027, 1)

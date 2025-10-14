@@ -1,5 +1,8 @@
 class_name GlitchCharacterController extends CharacterBody2D
 
+enum CharacterType {PLAYER, NPC}
+@export var character_type: CharacterType = CharacterType.NPC
+
 @export var grid_spacing: int = 16
 @export var move_speed: float = 320.0
 @export var controls: GlitchControls
@@ -59,16 +62,23 @@ func _physics_process(_delta: float):
 			var collision = get_slide_collision(i)
 			var collider = collision.get_collider()
 			
-			# if collision is GlitchCharacterController, handle damage
-			if collider is GlitchCharacterController:
-				if has_hat:
-					collider.take_damage(1)
-				else:
-					take_damage(1)
-				break # Only process first character collision
+			if character_type == CharacterType.PLAYER:
+				if collider is GlitchCharacterController:
+					if has_hat:
+						collider.take_damage(1)
+					else:
+						take_damage(1)
+					break
+			elif character_type == CharacterType.NPC:
+				if collider is GlitchCharacterController:
+					if collider.has_hat:
+						take_damage(1)
+					else:
+						collider.take_damage(1)
+					break
 
 		hit_wall.emit()
-		
+	
 		# Stop movement due to collision
 		velocity = Vector2.ZERO
 		is_moving = false
@@ -88,6 +98,7 @@ func spawn(pos: Vector2):
 	position = GameManager.snap_to_grid(pos)
 	hp = 1
 	is_alive = true
+	health_changed.emit(hp)
 
 func take_damage(amount: int):
 	hp -= amount

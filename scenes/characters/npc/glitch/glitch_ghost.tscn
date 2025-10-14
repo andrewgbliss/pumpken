@@ -14,9 +14,9 @@ load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609d
 atlas = SubResource("CompressedTexture2D_hupm0")
 region = Rect2(64, 0, 16, 16)
 
-[node name="GlitchGhost" type="CharacterBody2D" node_paths=PackedStringArray("controls", "sprite")]
+[node name="GlitchGhost" type="CharacterBody2D" node_paths=PackedStringArray("controls", "sprite") groups=["npc"]]
 collision_layer = 2
-collision_mask = 5
+collision_mask = 13
 motion_mode = 1
 script = ExtResource("1_hupm0")
 controls = NodePath("GlitchAIControls")

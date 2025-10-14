@@ -46,20 +46,31 @@ func _on_player_moved(new_position: Vector2):
 		MoveType.FOLLOW:
 			direction = _get_follow_movement(new_position)
 		MoveType.STAY:
-			direction = _get_stay_movement()
+			return
 		MoveType.PINGPONG:
 			direction = _get_pingpong_movement()
 	_move(direction)
 
 func _get_random_movement() -> MoveDirection:
-	return MoveDirection.RIGHT
+	var directions = [MoveDirection.LEFT, MoveDirection.RIGHT, MoveDirection.UP, MoveDirection.DOWN]
+	return directions[randi() % directions.size()]
 
 func _get_follow_movement(new_position: Vector2) -> MoveDirection:
-	print("following player to ", new_position)
-	return MoveDirection.RIGHT
-
-func _get_stay_movement() -> MoveDirection:
-	return MoveDirection.RIGHT
+	var delta = new_position - parent.position
+	
+	# Move in the direction with the larger distance
+	if abs(delta.x) >= abs(delta.y):
+		# Move horizontally
+		if delta.x > 0:
+			return MoveDirection.RIGHT
+		else:
+			return MoveDirection.LEFT
+	else:
+		# Move vertically
+		if delta.y > 0:
+			return MoveDirection.DOWN
+		else:
+			return MoveDirection.UP
 
 func _get_pingpong_movement() -> MoveDirection:
 	match pingpong_direction:

@@ -11,8 +11,9 @@ func _ready() -> void:
 	EventBus.player_spawned.connect(_on_player_spawned)
 	
 func _on_body_entered(body):
-	if body is GlitchCharacterController:
-		EventBus.world_changed.emit(goto_door_id, door_id, scene_path, scene_transition_name)
+	if visible:
+		if body is GlitchCharacterController:
+			EventBus.world_changed.emit(goto_door_id, door_id, scene_path, scene_transition_name)
 
 func _on_player_spawned(player):
 	player.collected_skulls.connect(_on_player_collected_skulls)

@@ -5,7 +5,6 @@ class_name Hotspot extends Node2D
 @export var interact_audio: AudioStreamPlayer
 @export var interaction_ui: InteractionUI
 @export var interaction_text: String = "Press F To interact"
-@export var body_group: String = "player"
 
 var in_range: bool = false
 var local_collision_pos: Vector2

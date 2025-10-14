@@ -22,6 +22,7 @@ load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609d
 collision_mask = 6
 motion_mode = 1
 script = ExtResource("1_5mchj")
+character_type = 0
 controls = NodePath("GlitchPlayerControls")
 sprite = NodePath("Sprite2D")
 hat_sprite = NodePath("Hat")

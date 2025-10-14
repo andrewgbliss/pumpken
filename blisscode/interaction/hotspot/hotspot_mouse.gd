@@ -14,11 +14,9 @@ func _ready():
 
 func _on_input_event(_viewport, _event, _shape_idx):
 	if Input.is_action_just_pressed("take"):
-		var body = get_tree().get_first_node_in_group(body_group)
+		var body = get_tree().get_first_node_in_group("player")
 		if body:
 			_interact_handler(body, get_global_mouse_position())
-		else:
-			print("No body found in group: ", body_group)
 
 func _on_mouse_entered():
 	if not in_range:

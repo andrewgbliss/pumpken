@@ -67,7 +67,9 @@ interaction_text = ""
 metadata/_custom_type_script = "uid://cllnj4m6d7la4"
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-color = Color(0.3090025, 0.6178197, 0.34135848, 1)
+color = Color(0.03562877, 0.5085646, 0, 1)
+energy = 3.0
 shadow_enabled = true
 texture = ExtResource("6_ub6u3")
 offset = Vector2(8, 8)
+texture_scale = 2.0

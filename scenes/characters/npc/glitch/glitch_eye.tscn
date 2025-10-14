@@ -14,14 +14,19 @@ load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609d
 atlas = SubResource("CompressedTexture2D_wu00w")
 region = Rect2(16, 16, 16, 16)
 
-[node name="GlitchEye" type="CharacterBody2D" node_paths=PackedStringArray("controls")]
-collision_mask = 4
+[node name="GlitchEye" type="CharacterBody2D" node_paths=PackedStringArray("controls", "sprite")]
+collision_layer = 2
+collision_mask = 5
 motion_mode = 1
 script = ExtResource("1_wu00w")
 controls = NodePath("GlitchAIControls")
+sprite = NodePath("Sprite2D")
+spawn_on_ready = true
+give_damage = true
 
 [node name="GlitchAIControls" type="Node" parent="."]
 script = ExtResource("2_fnjwf")
+move_type = 1
 metadata/_custom_type_script = "uid://bg1ecn0nprabn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -33,7 +38,5 @@ texture = SubResource("AtlasTexture_fnjwf")
 centered = false
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-energy = 2.0
 texture = ExtResource("3_sknhj")
 offset = Vector2(8, 8)
-texture_scale = 3.0

@@ -26,6 +26,7 @@ spawn_on_ready = true
 
 [node name="GlitchAIControls" type="Node" parent="."]
 script = ExtResource("2_8qpby")
+move_type = 2
 metadata/_custom_type_script = "uid://bg1ecn0nprabn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
