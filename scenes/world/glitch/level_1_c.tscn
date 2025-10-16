@@ -54,7 +54,7 @@ metadata/_custom_type_script = "uid://baibi6vypqgi8"
 [node name="Exit" type="Area2D" parent="."]
 position = Vector2(144, 112)
 script = ExtResource("4_iudld")
-scene_path = "res://scenes/world/glitch/level_1_a.tscn"
+scene_path = "res://scenes/world/glitch/level_1_d.tscn"
 metadata/_custom_type_script = "uid://dawrnhrddu0kw"
 
 [node name="Sprite2D" type="Sprite2D" parent="Exit"]

@@ -42,10 +42,11 @@ func spawn_player(entity_name: String, spawn_position: Vector2, parent = null):
 		SceneManager.current_scene.add_child(entity)
 	return entity
 
-func float_text(text: String, pos: Vector2, duration: float = 1.0, parent = null):
+func float_text(text: String, pos: Vector2, duration: float = 1.0, parent = null, color: Color = Color.WHITE):
 	var label = Label.new()
 	label.z_index = 1000
 	label.text = text
+	label.modulate = color
 	label.position = pos
 	label.add_theme_font_size_override("font_size", 16)
 	if parent:

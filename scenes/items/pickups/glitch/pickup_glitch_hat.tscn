@@ -21,7 +21,7 @@ vframes = 2
 metadata/_custom_type_script = "uid://dfarl1fr76j2f"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gg01l"]
-size = Vector2(17, 16)
+size = Vector2(16, 16)
 
 [node name="Hat" type="Node2D" node_paths=PackedStringArray("hotspots")]
 script = ExtResource("2_d8ri5")
@@ -42,7 +42,6 @@ collision_layer = 8
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea2D"]
-position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_gg01l")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]

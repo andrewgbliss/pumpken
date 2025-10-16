@@ -65,13 +65,19 @@ func _physics_process(_delta: float):
 			if character_type == CharacterType.PLAYER:
 				if collider is GlitchCharacterController:
 					if has_hat:
+						SpawnManager.float_text("Cast Vanish!", position, 1.0, get_parent(), Color.RED)
 						collider.take_damage(1)
 					else:
 						take_damage(1)
 					break
+				if collider is StaticBody2D:
+					SpawnManager.float_text("Break!", position, 1.0, get_parent(), Color.YELLOW)
+					collider.queue_free()
+					break
 			elif character_type == CharacterType.NPC:
 				if collider is GlitchCharacterController:
 					if collider.has_hat:
+						SpawnManager.float_text("Cast Vanish!", position, 1.0, get_parent(), Color.RED)
 						take_damage(1)
 					else:
 						collider.take_damage(1)
@@ -127,22 +133,29 @@ func die():
 func restore_health(amount: int):
 	hp += amount
 	health_changed.emit(hp)
-	if hp > 3:
-		hp = 3
 
 func item_pickup(item: Item, _pos):
 	match item.name:
 		"skull":
-			skulls += 1
-			if skulls >= 3:
-				collected_skulls.emit()
+			SpawnManager.float_text("+1 Skull", position, 1.0, get_parent())
+			if character_type == CharacterType.PLAYER:
+				skulls += 1
+				if skulls >= 3:
+					collected_skulls.emit()
 		"purple magicians hat":
-			has_hat = true
-			hat_sprite.show()
+			if character_type == CharacterType.PLAYER:
+				SpawnManager.float_text("+1 Hat", position, 1.0, get_parent())
+				has_hat = true
+				if hat_sprite:
+					hat_sprite.show()
 		"candle":
-			restore_health(1)
+			if character_type == CharacterType.PLAYER:
+				SpawnManager.float_text("+1 Health", position, 1.0, get_parent())
+				restore_health(1)
 		"cauldron":
-			take_damage(1)
+			if character_type == CharacterType.PLAYER:
+				SpawnManager.float_text("-1 Health", position, 1.0, get_parent(), Color.RED)
+				take_damage(1)
 		_:
 			print("Unknown item: ", item.name)
 

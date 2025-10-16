@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://quiparkjpxug"]
+[gd_scene load_steps=8 format=3 uid="uid://quiparkjpxug"]
 
 [ext_resource type="Script" uid="uid://cixdwmjhk7c0x" path="res://blisscode/character/glitch_character_controller.gd" id="1_r4sg0"]
 [ext_resource type="Script" uid="uid://bg1ecn0nprabn" path="res://blisscode/character/controls/glitch/glitch_ai_controls.gd" id="2_t1el1"]
@@ -14,6 +14,9 @@ load_path = "res://.godot/imported/Halloween-Items.png-a13faa183057354962f4b609d
 atlas = SubResource("CompressedTexture2D_r4sg0")
 region = Rect2(48, 0, 16, 16)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_r4sg0"]
+radius = 54.147945
+
 [node name="GlitchBat" type="CharacterBody2D" node_paths=PackedStringArray("controls", "sprite")]
 collision_layer = 2
 collision_mask = 5
@@ -23,9 +26,11 @@ controls = NodePath("GlitchAIControls")
 sprite = NodePath("Sprite2D")
 spawn_on_ready = true
 
-[node name="GlitchAIControls" type="Node" parent="."]
+[node name="GlitchAIControls" type="Node" parent="." node_paths=PackedStringArray("in_range_area")]
 script = ExtResource("2_t1el1")
 move_type = 1
+in_range_area = NodePath("../InRangeArea2D")
+idle_until_aggro = true
 metadata/_custom_type_script = "uid://bg1ecn0nprabn"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -39,3 +44,10 @@ centered = false
 [node name="PointLight2D" type="PointLight2D" parent="."]
 texture = ExtResource("3_3fsru")
 offset = Vector2(8, 8)
+
+[node name="InRangeArea2D" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InRangeArea2D"]
+position = Vector2(8, 8)
+shape = SubResource("CircleShape2D_r4sg0")

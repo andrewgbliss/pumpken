@@ -7,14 +7,27 @@ enum PingpongDirection {LEFTRIGHT, UPDOWN}
 @export var move_direction: MoveDirection = MoveDirection.RIGHT
 @export var move_type: MoveType = MoveType.RANDOM
 @export var pingpong_direction: PingpongDirection = PingpongDirection.LEFTRIGHT
+@export var in_range_area: Area2D
+@export var idle_until_aggro: bool = false
 
 var parent: GlitchCharacterController
 var player: GlitchCharacterController
+
+var in_range = false
 
 func _ready():
 	parent = get_parent()
 	parent.hit_wall.connect(_on_parent_hit_wall)
 	EventBus.player_spawned.connect(_on_player_spawned)
+	if in_range_area:
+		in_range_area.body_entered.connect(_on_in_range_area_body_entered)
+		in_range_area.body_exited.connect(_on_in_range_area_body_exited)
+
+func _on_in_range_area_body_entered(_body: Node2D):
+	in_range = true
+
+func _on_in_range_area_body_exited(_body: Node2D):
+	in_range = false
 
 func _on_parent_hit_wall():
 	match move_type:
@@ -39,12 +52,18 @@ func _on_player_spawned(p: GlitchCharacterController):
 	player.moved.connect(_on_player_moved)
 
 func _on_player_moved(new_position: Vector2):
+	if idle_until_aggro and not in_range:
+		return
+
 	var direction = MoveDirection.RIGHT
 	match move_type:
 		MoveType.RANDOM:
 			direction = _get_random_movement()
 		MoveType.FOLLOW:
-			direction = _get_follow_movement(new_position)
+			if in_range:
+				direction = _get_follow_movement(new_position)
+			else:
+				direction = _get_random_movement()
 		MoveType.STAY:
 			return
 		MoveType.PINGPONG:
