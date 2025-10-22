@@ -57,4 +57,5 @@ func float_text(text: String, pos: Vector2, duration: float = 1.0, parent = null
 	tween.parallel().tween_property(label, "position", label.position + Vector2(0, -16), duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.parallel().tween_property(label, "modulate:a", 0.0, duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	await tween.finished
-	label.queue_free()
+	if label and is_instance_valid(label):
+		label.queue_free()
